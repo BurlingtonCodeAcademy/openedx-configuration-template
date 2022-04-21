@@ -318,7 +318,8 @@
 - local_action:
     module: stat
     path: "{{ NGINX_SSL_CERTIFICATE }}"
-      #  become: False
+  become: true
+  become_user: "ubuntu"
   register: ssl_cert
   tags:
     - install
