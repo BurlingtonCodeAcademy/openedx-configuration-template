@@ -318,7 +318,7 @@
 - local_action:
     module: stat
     path: "{{ NGINX_SSL_CERTIFICATE }}"
-  become: False
+      #  become: False
   register: ssl_cert
   tags:
     - install
