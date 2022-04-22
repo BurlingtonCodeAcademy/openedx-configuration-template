@@ -319,7 +319,7 @@
     module: stat
     path: "{{ NGINX_SSL_CERTIFICATE }}"
   become: true
-  become_user: "jenkins"
+  become_user: "{{ test_user  }}"
   register: ssl_cert
   tags:
     - install
