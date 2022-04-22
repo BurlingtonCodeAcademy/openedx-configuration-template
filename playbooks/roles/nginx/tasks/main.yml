@@ -318,8 +318,8 @@
 - local_action:
     module: stat
     path: "{{ NGINX_SSL_CERTIFICATE }}"
-  become: true
-  become_user: "{{ nginx_user }}"
+  become: false
+  ansible_become: false
   register: ssl_cert
   tags:
     - install
