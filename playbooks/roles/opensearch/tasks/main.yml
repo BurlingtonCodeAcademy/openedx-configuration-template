@@ -1,0 +1,131 @@
+---
+
+# opensearch
+#
+# Dependencies:
+#
+#   * common
+#
+# Example play:
+#
+# This role can be used to do a single-server or clustered
+# installation of the opensearch service.  When a cluster
+# is being installed, there are two important things that
+# you must know.
+
+# The OPENSEARCH_CLUSTERED var must be true.
+
+# All hosts targeted by your play will be cluster peers.
+# Opensearch will determine who the master should be.
+#
+# Ansible provides handy set operators for use in the
+# plays host declaration, as seen in the following example.
+#
+# -  hosts: tag_role_opensearch:&tag_environment_stage
+#    roles:
+#    - common
+#    - opensearch
+#
+
+- name: Download opensearch {{ OPENSEARCH_VERSION }}
+  get_url:
+    url: "{{ opensearch_download_url }}/{{ OPENSEARCH_VERSION }}/opensearch-{{ OPENSEARCH_VERSION }}-linux-x64.tar.gz"
+    dest: "/tmp/opensearch.tar.gz"
+  tags:
+    - install
+    - install:base
+
+- name: Create opensearch user
+  user:
+    name: "{{ opensearch_user }}"
+    state: present
+    shell: /bin/bash
+  tags:
+    - install
+    - install:base
+
+- name: Create home directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ opensearch_user }}"
+    group: "{{ opensearch_user }}"
+  with_items:
+    - "{{ opensearch_data_dir }}"
+    - "{{ opensearch_log_dir }}"
+    - "{{ opensearch_cfg_dir }}"
+  tags:
+    - install
+    - install:base
+
+- name: Extract the tar file
+  command: chdir=/tmp/ tar -xvzf opensearch.tar.gz -C "{{ opensearch_app_dir }}" --strip-components=1
+  tags:
+    - install
+    - install:base
+  register: opensearch_reinstall
+
+- name: update opensearch defaults
+  template:
+    src: etc/default/opensearch.j2
+    dest: /etc/default/opensearch
+  tags:
+    - install
+    - install:configuration
+
+- name: drop the opensearch config
+  template:
+    src: edx/etc/opensearch/opensearch.yml.j2
+    dest: "{{ opensearch_cfg_dir }}/opensearch.yml"
+    mode: 0644
+  tags:
+    - install
+    - install:configuration
+
+- name: drop the opensearch logging config
+  copy:
+    src: /etc/opensearch/log4j2.properties
+    dest: "{{ opensearch_cfg_dir }}/log4j2.properties"
+    remote_src: yes
+    mode: 0644
+  tags:
+    - install
+    - install:configuration
+
+- name: drop the opensearch jvm config
+  template:
+    src: edx/etc/opensearch/jvm.options.j2 
+    dest: "{{ opensearch_cfg_dir }}/jvm.options"
+    mode: 0644
+  tags:
+    - install
+    - install:configuration
+
+- name: drop the opensearch systemd service config
+  template:
+    src: lib/systemd/system/opensearch.service.j2 
+    dest: "/lib/systemd/system/opensearch.service"
+    mode: 0644
+  tags:
+    - install
+    - install:configuration
+
+- name: Make sure opensearch is enabled and started
+  service:
+    name: opensearch
+    state: started
+    enabled: yes
+  tags:
+    - manage
+    - manage:start
+
+- name: Restart opensearch when there has been an upgrade
+  service:
+    name: opensearch
+    state: restarted
+    enabled: yes
+  when: opensearch_reinstall.changed
+  tags:
+    - manage
+    - manage:restart
+    - install
