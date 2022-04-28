@@ -51,6 +51,7 @@
     owner: "{{ opensearch_user }}"
     group: "{{ opensearch_user }}"
   with_items:
+    - "{{ opensearch_app_dir }}"
     - "{{ opensearch_data_dir }}"
     - "{{ opensearch_log_dir }}"
     - "{{ opensearch_cfg_dir }}"
