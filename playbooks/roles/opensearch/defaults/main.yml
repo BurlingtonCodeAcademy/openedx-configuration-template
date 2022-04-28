@@ -3,7 +3,7 @@ opensearch_app_dir: "{{ COMMON_APP_DIR }}/opensearch"
 opensearch_data_dir: "{{ COMMON_DATA_DIR }}/opensearch"
 opensearch_log_dir: "{{ COMMON_LOG_DIR }}/opensearch"
 opensearch_cfg_dir: "{{ COMMON_CFG_DIR }}/opensearch"
-opensearch_download_url: ": https://artifacts.opensearch.org/releases/bundle/opensearch"
+opensearch_download_url: "https://artifacts.opensearch.org/releases/bundle/opensearch"
 opensearch_user: "opensearch"
 opensearch_group: "opensearch"
 
