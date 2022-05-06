@@ -111,6 +111,14 @@
     - install
     - install:configuration
 
+- name: OpenSearch Install | create systemd service
+  template:
+    src: opensearch.service
+    dest: "{{ systemctl_path }}/opensearch.service"
+  tags:
+    - install
+    - install:configuration
+
 - name: Make sure opensearch is enabled and started
   service:
     name: opensearch
