@@ -83,15 +83,15 @@
     - install
     - install:configuration
 
-- name: drop the opensearch logging config
-  copy:
-    src: /etc/opensearch/log4j2.properties
-    dest: "{{ opensearch_cfg_dir }}/log4j2.properties"
-    remote_src: yes
-    mode: 0644
-  tags:
-    - install
-    - install:configuration
+      #- name: drop the opensearch logging config
+      #  copy:
+      #    src: /etc/opensearch/log4j2.properties
+      #dest: "{{ opensearch_cfg_dir }}/log4j2.properties"
+      #remote_src: yes
+      #mode: 0644
+      #tags:
+      #- install
+      #- install:configuration
 
 - name: drop the opensearch jvm config
   template:
