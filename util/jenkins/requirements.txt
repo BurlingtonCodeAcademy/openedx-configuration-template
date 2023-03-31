@@ -68,7 +68,7 @@ pyyaml==5.4.1
     # via
     #   -r requirements/jenkins.in
     #   awscli
-redis==2.10.6
+redis==4.4.4
     # via -r requirements/jenkins.in
 requests==2.27.1
     # via opsgenie-sdk
