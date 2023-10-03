@@ -18,5 +18,5 @@ requests==2.27.1
     # via -r requirements/pingdom.in
 six==1.14.0
     # via -r requirements/pingdom.in
-urllib3==1.26.9
+urllib3==1.26.17
     # via requests
